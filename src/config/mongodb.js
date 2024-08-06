@@ -1,10 +1,9 @@
 //lttin2012/JP8zStRPYEVzd4Wh
-const MONGODB_URI = 'mongodb+srv://lttin2012:JP8zStRPYEVzd4Wh@cluster0-tinlt.5z9bt4s.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0-Tinlt'
-const DATABASE_Name ='Trello'
+import {env} from '~/config/environment'
 import {MongoClient, ServerApiVersion} from 'mongodb'
 let trelloDatabaseInstance = null
 // Khoi tao doi tuong Client de connect MongoDb
-const mongoClientInstance = new MongoClient (MONGODB_URI , {
+const mongoClientInstance = new MongoClient (env.MONGODB_URI , {
     serverApi: {
         version: ServerApiVersion.v1,
         strict: true,
@@ -14,9 +13,12 @@ const mongoClientInstance = new MongoClient (MONGODB_URI , {
 // Ket noi den Database
 export const CONNECT_DB = async () => {
     await mongoClientInstance.connect()
-    trelloDatabaseInstance = mongoClientInstance.db(DATABASE_Name)
+    trelloDatabaseInstance = mongoClientInstance.db(env.DATABASE_NAME)
 }
 export const GET_DB = () =>{
     if(!trelloDatabaseInstance) throw new Error('Fail')
   return trelloDatabaseInstance
+}
+export const CLOSE_DB = async () =>{
+   await mongoClientInstance.close()
 }
